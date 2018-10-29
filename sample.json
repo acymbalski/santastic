@@ -1,0 +1,38 @@
+
+{
+	"people":
+	{
+		"families":
+		[
+			{
+				"name": "smith",
+				"members":
+				{
+					"alice":
+					{
+						"email": "asmith@smithy.com"
+					},
+					"bob":
+					{
+						"email": "bsmith@smithy.com"
+					}
+				}
+			},
+			{
+				"name": "jones",
+				"members":
+				{
+					"carl":
+					{
+						"email": "cjones@jonesy.com"
+					},
+					"donna":
+					{
+						"email": "djones@jonesy.com"
+					}
+				}
+			}
+		]
+	}
+
+}
