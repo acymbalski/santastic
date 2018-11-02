@@ -15,10 +15,13 @@ Potential outcomes are:
 
 We would denote this in an organization's config .json using "family" groups.
 
+You can run Santastic by using the following command:
+```
+python3 santastic.py -c sample.json
+```
 
 ## TODO
 - Add support to send emails to candidates
 - Add GUI
 - Add support to retrieve a specific member's targets
 - Add support for multiple unique pickings
-- Add support to pass in a source .json (only reads "sample.json" at the moment)
