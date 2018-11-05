@@ -75,6 +75,10 @@ class santastic():
         for l in c:
             if not self.isValidLink(l):
                 return False
+                
+        if len(c) != len(self.people):
+            return False
+
         return True
         
     def generateChain(self, depth=0):
