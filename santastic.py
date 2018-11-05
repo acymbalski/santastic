@@ -7,14 +7,24 @@ import pickle
 
 from person import person
 from links import link, linklist, chain
+
+import EmailioEstevez
      
+
 class santastic():     
 
     people = []
 
+    emailer = None
+    send_enabled = False
     
-    def __init__(self):
-        pass
+    def __init__(self, email_cfg="", actually_send=False):
+        self.send_enabled = actually_send
+        if self.send_enabled:
+            self.emailer = EmailioEstevez.Emailio(email_cfg)
+        else:
+            self.emailer = EmailioEstevez.Emailio()
+
         
     def load_config(self, config_filename="sample.json"):
         try:
@@ -120,35 +130,108 @@ class santastic():
         except:
             return None
 
+    def send_all_emails(self, chain):
+        # get person
+        for link in chain:
+            self.send_email(link)
+            self.emailer.clear_addresses()
+    
+    def send_email(self, link):
+        # from -> to
+        person = link.source
+        giftee = link.destination
+        
+        # build subject/message
+        self.emailer.add_address(person.email)
+        
+        self.emailer.set_subject("Secret Santa Pick")
+        self.emailer.set_message_with_template("secret_santa_template.txt", [person.full_name, giftee.full_name])
+        
+        # send
+        if self.send_enabled:
+            print("Actually sending email to {}...".format(person.name))
+            self.emailer.send()
+        else:
+            print("Not actually sending email.")
+        #self.emailer.send()
+    
+    def resend(self, chain):
+        # iterate list
+        index = 0
+        for person in self.people:
+            print("{}: {}".format(str(index), person))
+            index += 1
+        
+        validChoice = False
+        print()
+        while not validChoice:
+            print("Select target(s) to resend, following this format (ex): 1,4,5")
+            choices = input()
+            
+            try:
+                for choice in choices.split(','):
+                    index = int(choice.strip())
+                    print("Sending email for person: {}...".format(self.people[index]))
+                    
+                    for link in chain:
+                        if link.source.code == self.people[index].code:
+                            self.send_email(link)
+                            self.emailer.clear_addresses()
+                            break
+                    
+                    
+                validChoice = True
+            except:
+                print("Invalid choice. Try again.")
+        # ask user to select numbers
+        # send()
+        
+    def cleanup(self):
+        print()
+        print("Cleaning up...")
+        self.emailer.close()
+
         
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("-c", "--config", type=str, help="config file")
+    parser.add_argument("-c", "--config", type=str, help="family config file")
     parser.add_argument("-l", "--load", type=str, help="load saved chain filename")
     parser.add_argument("-o", "--save", type=str, help="save chain filename (default: secret.santa)", default="secret.santa")
+    parser.add_argument("-e", "--email_config", type=str, help="email config file")
+    parser.add_argument("-A", "--actually_send", action="store_true", help="will not actually send emails without this")
+    parser.add_argument("-r", "--resend", action="store_true", help="launch email re-sender")
+
 
     args = parser.parse_args()
     
-    print(args.config)
-
-    
-    santa = santastic()
-    if args.config != None:
-        santa.load_config(args.config)
-    else:
-        santa.load_config()
-
-    if args.load != None:
-        ch = santa.load_chain(args.load)
-    else:
-        print("generating chain...")
-        ch = santa.generateChain()
-
-    print(ch)
-    
-    if args.load == None:
-        santa.save_chain(ch, args.save)
     try:
-        pass
+        santa = santastic(args.email_config, args.actually_send)
+    
+        if args.config != None:
+            santa.load_config(args.config)
+        else:
+            santa.load_config()
+
+        if args.load != None:
+            ch = santa.load_chain(args.load)
+        else:
+            print("generating chain...")
+            ch = santa.generateChain()
+
+        print(ch)
+        
+        if args.load == None:
+            santa.save_chain(ch, args.save)
+        
+        if args.resend:
+            santa.resend(ch)
+        
+        if args.actually_send:
+            if not args.resend:
+                santa.send_all_emails(ch)
+
     except:
         print("Exception caught!")
+    finally:
+        if args.actually_send:
+            santa.cleanup()
