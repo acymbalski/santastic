@@ -77,7 +77,6 @@ class santastic():
         links = self.generateLinks()
 
         # grab first person, since chain is a loop it wont matter
-        print(self.people)
         curpers = self.people[0]
         # select from their out-links
         while len(links) > 0:
