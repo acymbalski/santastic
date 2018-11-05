@@ -204,12 +204,13 @@ if __name__ == "__main__":
     parser.add_argument("-e", "--email_config", type=str, help="email config file")
     parser.add_argument("-A", "--actually_send", action="store_true", help="will not actually send emails without this")
     parser.add_argument("-r", "--resend", action="store_true", help="launch email re-sender")
-
+    parser.add_argument("-C", "--cheat", action="store_true", help="see all selected names (cheater!)")
 
     args = parser.parse_args()
     
+    santa = santastic(args.email_config, args.actually_send)
+
     try:
-        santa = santastic(args.email_config, args.actually_send)
     
         if args.config != None:
             santa.load_config(args.config)
@@ -222,7 +223,8 @@ if __name__ == "__main__":
             print("generating chain...")
             ch = santa.generateChain()
 
-        print(ch)
+        if args.cheat:
+            print(ch)
         
         if args.load == None:
             santa.save_chain(ch, args.save)
