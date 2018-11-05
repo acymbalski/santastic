@@ -10,11 +10,13 @@
 				{
 					"alice":
 					{
-						"email": "asmith@smithy.com"
+						"email": "asmith@smithy.com",
+                        "full name": "Alice Smith"
 					},
 					"bob":
 					{
-						"email": "bsmith@smithy.com"
+						"email": "bsmith@smithy.com",
+                        "full name": "Bob Smith"
 					}
 				}
 			},
@@ -24,11 +26,13 @@
 				{
 					"carl":
 					{
-						"email": "cjones@jonesy.com"
+						"email": "cjones@jonesy.com",
+                        "full name": "Carl Jones"
 					},
 					"donna":
 					{
-						"email": "djones@jonesy.com"
+						"email": "djones@jonesy.com",
+                        "full name": "Donna Jones"
 					}
 				}
 			}
