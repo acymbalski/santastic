@@ -21,7 +21,9 @@ python3 santastic.py -c sample.json
 ```
 
 ## TODO
-- Add support to send emails to candidates
 - Add GUI
 - Add support to retrieve a specific member's targets
 - Add support for multiple unique pickings
+- Add support for an administrator; can receive test emails, get master list
+- Add support for password protections
+- Simplify usage
